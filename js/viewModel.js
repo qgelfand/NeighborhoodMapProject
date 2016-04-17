@@ -130,6 +130,7 @@ var myViewModel = {
         });
     },
     googlePlaceSearch: function() {
+        // console.log('Place Search Triggered');
         mapFunction.placeSearch(myViewModel.googlePlaceKeyword());
     }
 };

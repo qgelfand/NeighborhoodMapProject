@@ -125,16 +125,23 @@ var mapFunction = {
         };
     },
     //sets info window content to the wikipedia link and opens the info window, attached to the selected marker
-    setInfoWindowContent: function(wikiLink) {
-        for (i = 0; i < markers.length; i++) {
-            if (markers[i].title == articleStr) {
-                infoWindow.setContent(wikiLink);
-                infoWindow.open(map, markers[i]);
-            }
-        }
-    },
+    // setInfoWindowContent: function(wikiLink) {
+    //     for (i = 0; i < markers.length; i++) {
+    //         if (markers[i].title == articleStr) {
+    //             infoWindow.setContent(wikiLink);
+    //             infoWindow.open(map, markers[i]);
+    //         }
+    //     }
+    // },
     placeSearch: function(googlePlacesKeyword) {
         console.log(googlePlacesKeyword);
+        for(var i=0; i<markers.length;i++) {
+            markers[i].setMap(null);
+            if(markers[i].title.toLowerCase().indexOf(googlePlacesKeyword.toLowerCase()) !== -1) {
+                console.log("MATCH: "+ markers[i].title);
+                markers[i].setMap(map);
+            }
+        };
 
     }
 };
