@@ -24,52 +24,63 @@ var mapFunction = {
     },
     //called once the map loads, places markers based on data in the model & adds click listener
     initializeMarkers: function(arrayPlaces) {
+/*MARKERS*/
         //var bounds used to auto-center map to include all markers, source:
         //http://stackoverflow.com/questions/15719951/google-maps-api-v3-auto-center-map-with-multiple-markers
-        var bounds = new google.maps.LatLngBounds();
-        for (i = 0; i < arrayPlaces.length; i++) {
-            var place = arrayPlaces[i];
-            var marker = new google.maps.Marker({
-                position: place.position,
-                title: place.title,
-                icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-            });
-            //adds click listener to each marker, passes marker object to a closure function
-            google.maps.event.addListener(marker, 'click', mapFunction.clickedMarker(marker));
-            markers.push(marker);
-            marker.setMap(map);
-            //extend the bounds to include each marker's position
-            bounds.extend(marker.position);
-        }
-        //now fit the map to the newly inclusive bounds
-        map.fitBounds(bounds);
+        // var bounds = new google.maps.LatLngBounds();
+        // for (i = 0; i < arrayPlaces.length; i++) {
+        //     var place = arrayPlaces[i];
+        //     var marker = new google.maps.Marker({
+        //         position: place.position,
+        //         title: place.title,
+        //         icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+        //     });
+        //     //adds click listener to each marker, passes marker object to a closure function
+        //     google.maps.event.addListener(marker, 'click', mapFunction.clickedMarker(marker));
+        //     markers.push(marker);
+        //     marker.setMap(map);
+        //     //extend the bounds to include each marker's position
+        //     bounds.extend(marker.position);
+        // }
+        // //now fit the map to the newly inclusive bounds
+        // map.fitBounds(bounds);
+/*MARKERS*/
 
 /*GOOGLE PLACES*/
-        // var request = {
-        //     location: map.getCenter(),
-        //     radius: '500',
-        //     query: 'Museums'
-        // };
-        // var service = new google.maps.places.PlacesService(map);
-        // service.textSearch(request, myViewModel.callback);
+        var request = {
+            location: map.getCenter(),
+            radius: '1000',
+            query: 'Museums'
+        };
+        var service = new google.maps.places.PlacesService(map);
+        service.textSearch(request, mapFunction.callback);
 /*GOOGLE PLACES*/
 
-        //initialize an info window to be called when a place is selected
+/*INFO WINDOW*///initialize an info window to be called when a place is selected
         infoWindow = new google.maps.InfoWindow({
             content: ''
         });
     },
+/*INFO WINDOW*/
+
     callback: function(results, status) {
+        //var placeLoc = {};
+        var marker = {};
         if (status == google.maps.places.PlacesServiceStatus.OK) {
-            var marker = new google.maps.Marker({
-                map: map,
-                place: {
-                    placeId: results[0].place_id,
-                    location: results[0].geometry.location
-                }
-            });
+            for (var i = 0; i < results.length; i++) {
+                //placeLoc = results[i].geometry.location;
+                marker = new google.maps.Marker({
+                    map: map,
+                    position: results[i].geometry.location,
+                    placeId: results[i].place_id,
+                    icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+                });
+                google.maps.event.addListener(marker, 'click', mapFunction.clickedMarker(marker));
+                markers.push(marker);
             }
-        },
+        }
+    },
+
     //filters displayed markers based on filtered list
     updateMarkers: function(arrayPlaces) {
         // mapFunction.hideMarkers();
@@ -103,11 +114,10 @@ var mapFunction = {
             myViewModel.eventClickedMarker(marker);
             for (i = 0; i < markers.length; i++) {
                 markers[i].setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
-                markers[i].setAnimation(null);
             }
             marker.setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png');
             marker.setAnimation(google.maps.Animation.BOUNCE);
-            //setTimeout(function(){ marker.setAnimation(null); }, 750)
+            setTimeout(function(){ marker.setAnimation(null); }, 712)
         };
     },
     //sets info window content to the wikipedia link and opens the info window, attached to the selected marker
