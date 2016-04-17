@@ -24,34 +24,15 @@ var mapFunction = {
     },
     //called once the map loads, places markers based on data in the model & adds click listener
     initializeMarkers: function(arrayPlaces) {
-/*MARKERS*/
-        //var bounds used to auto-center map to include all markers, source:
-        //http://stackoverflow.com/questions/15719951/google-maps-api-v3-auto-center-map-with-multiple-markers
-        // var bounds = new google.maps.LatLngBounds();
-        // for (i = 0; i < arrayPlaces.length; i++) {
-        //     var place = arrayPlaces[i];
-        //     var marker = new google.maps.Marker({
-        //         position: place.position,
-        //         title: place.title,
-        //         icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-        //     });
-        //     //adds click listener to each marker, passes marker object to a closure function
-        //     google.maps.event.addListener(marker, 'click', mapFunction.clickedMarker(marker));
-        //     markers.push(marker);
-        //     marker.setMap(map);
-        //     //extend the bounds to include each marker's position
-        //     bounds.extend(marker.position);
-        // }
-        // //now fit the map to the newly inclusive bounds
-        // map.fitBounds(bounds);
-/*MARKERS*/
 
 /*GOOGLE PLACES*/
+        //sets up an initial seach to pull museum locations from Google Places
         var request = {
             location: map.getCenter(),
             radius: '1000',
             query: 'Museums'
         };
+        //creates a new Google Places search, calls 'callback()' on search completion
         var service = new google.maps.places.PlacesService(map);
         service.textSearch(request, mapFunction.callback);
 /*GOOGLE PLACES*/
@@ -66,10 +47,11 @@ var mapFunction = {
     callback: function(results, status) {
         //var placeLoc = {};
         var marker = {};
+        //if no error with search result,
         if (status == google.maps.places.PlacesServiceStatus.OK) {
-            console.log(results[0]);
-
+            // console.log(results[0].geometry.location.lat());
             for (var i = 0; i < results.length; i++) {
+                //create new marker using Google Places search result
                 marker = new google.maps.Marker({
                     map: map,
                     position: results[i].geometry.location,
@@ -77,8 +59,10 @@ var mapFunction = {
                     icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
                     title: results[i].name
                 });
+                //add click listener to each marker
                 google.maps.event.addListener(marker, 'click', mapFunction.clickedMarker(marker));
                 markers.push(marker);
+                myViewModel.addPlace(marker);
             }
         }
     },
@@ -134,11 +118,11 @@ var mapFunction = {
     //     }
     // },
     placeSearch: function(googlePlacesKeyword) {
-        console.log(googlePlacesKeyword);
+        // console.log(googlePlacesKeyword);
         for(var i=0; i<markers.length;i++) {
             markers[i].setMap(null);
             if(markers[i].title.toLowerCase().indexOf(googlePlacesKeyword.toLowerCase()) !== -1) {
-                console.log("MATCH: "+ markers[i].title);
+                // console.log("MATCH: "+ markers[i].title);
                 markers[i].setMap(map);
             }
         };
