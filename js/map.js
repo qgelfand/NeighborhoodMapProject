@@ -19,6 +19,9 @@ var mapFunction = {
     googleError: function() {
         alert('Something Done Broke: Failed to get Google Maps.');
     },
+    googlePlacesError: function() {
+        alert('Something Done Broke: Failed to get Google Places.');
+    },
     //called once the map loads, places markers based on data in the model & adds click listener
     initializeMarkers: function(arrayPlaces) {
         //var bounds used to auto-center map to include all markers, source:
@@ -40,11 +43,33 @@ var mapFunction = {
         }
         //now fit the map to the newly inclusive bounds
         map.fitBounds(bounds);
+
+/*GOOGLE PLACES*/
+        // var request = {
+        //     location: map.getCenter(),
+        //     radius: '500',
+        //     query: 'Museums'
+        // };
+        // var service = new google.maps.places.PlacesService(map);
+        // service.textSearch(request, myViewModel.callback);
+/*GOOGLE PLACES*/
+
         //initialize an info window to be called when a place is selected
         infoWindow = new google.maps.InfoWindow({
             content: ''
         });
     },
+    callback: function(results, status) {
+        if (status == google.maps.places.PlacesServiceStatus.OK) {
+            var marker = new google.maps.Marker({
+                map: map,
+                place: {
+                    placeId: results[0].place_id,
+                    location: results[0].geometry.location
+                }
+            });
+            }
+        },
     //filters displayed markers based on filtered list
     updateMarkers: function(arrayPlaces) {
         // mapFunction.hideMarkers();
@@ -93,5 +118,9 @@ var mapFunction = {
                 infoWindow.open(map, markers[i]);
             }
         }
+    },
+    placeSearch: function(googlePlacesKeyword) {
+        markers.setMap(null);
+
     }
 };

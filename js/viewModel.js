@@ -1,6 +1,7 @@
 var myViewModel = {
     //search bar contents
     keyword: ko.observable(''),
+    googlePlaceKeyword: ko.observable(''),
     noMatch: ko.observable(false),
     wikiLink: ko.observable(''),
     //array that has all locations/markers
@@ -127,5 +128,8 @@ var myViewModel = {
                 clearTimeout(wikiRequestTimeout);
             },
         });
+    },
+    googlePlaceSearch: function() {
+        mapFunction.placeSearch(myViewModel.googlePlaceKeyword());
     }
 };
