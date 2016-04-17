@@ -27,7 +27,7 @@ var myViewModel = {
             myViewModel.arrayPlaces()[i].selected(false);
         }
         place.selected(true);
-        console.log(place.title);
+        //console.log(place.title);
         myViewModel.loadWikiArticle(place.title);
         mapFunction.clickedListItem(place);
     },
@@ -39,7 +39,7 @@ var myViewModel = {
             }
         }
     },
-    //makes ajax request to list relevant wikipedia articles based on selected list item
+    //makes ajax request to list relevant wikipedia articles based on selected place
     loadWikiArticle: function(selection) {
         myViewModel.wikiLink('Searching...');
         var wikiRequestTimeout = setTimeout(function() {
@@ -56,7 +56,7 @@ var myViewModel = {
                 if(articleStr) {
                     var url = 'http://en.wikipedia.org/wiki/' + articleStr;
                     myViewModel.wikiLink('<a href="' + url + '" target="_blank">' + articleStr + '</a>');
-                    //mapFunction.setInfoWindowContent('Wikipedia Link: ' + myViewModel.wikiLink());
+                    mapFunction.setInfoWindowContent(response[1], 'Wikipedia Link: ' + myViewModel.wikiLink());
                     clearTimeout(wikiRequestTimeout);
                 }
             },

@@ -62,6 +62,7 @@ var mapFunction = {
                 //add click listener to each marker
                 google.maps.event.addListener(marker, 'click', mapFunction.clickedMarker(marker));
                 markers.push(marker);
+                //add result to myViewModel
                 myViewModel.addPlace(marker);
             }
         }
@@ -71,22 +72,22 @@ var mapFunction = {
     updateMarkers: function(arrayPlaces) {
         // mapFunction.hideMarkers();
         infoWindow.close();
-        for (i = 0; i < arrayPlaces.length; i++) {
+        for (var i = 0; i < arrayPlaces.length; i++) {
             markers[i].setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
             if (arrayPlaces[i].filterMatch()) {
                 markers[i].setMap(map);
             } else markers[i].setMap(null);
         }
     },
-    //if a list item is selected, highlight it.
+    //if a list item is selected, select the marker.
     clickedListItem: function(place) {
         marker = place.title;
-        for (i = 0; i < markers.length; i++) {
+        for (var i = 0; i < markers.length; i++) {
             if (markers[i].title == marker) {
                 markers[i].setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png');
                 markers[i].setAnimation(google.maps.Animation.BOUNCE);
                 //the timeout below doesn't work for some reason!
-                //setTimeout(function(){ markers[i].setAnimation(null); }, 750)
+                //setTimeout(function(){ markers[i].setAnimation(null); }, 712)
             } else {
                 markers[i].setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
                 markers[i].setAnimation(null);
@@ -98,7 +99,7 @@ var mapFunction = {
     clickedMarker: function(marker) {
         return function() {
             myViewModel.eventClickedMarker(marker);
-            for (i = 0; i < markers.length; i++) {
+            for (var i = 0; i < markers.length; i++) {
                 markers[i].setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
             }
             marker.setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png');
@@ -109,17 +110,18 @@ var mapFunction = {
         };
     },
     //sets info window content to the wikipedia link and opens the info window, attached to the selected marker
-    // setInfoWindowContent: function(wikiLink) {
-    //     for (i = 0; i < markers.length; i++) {
-    //         if (markers[i].title == articleStr) {
-    //             infoWindow.setContent(wikiLink);
-    //             infoWindow.open(map, markers[i]);
-    //         }
-    //     }
-    // },
+    setInfoWindowContent: function(title, wikiLink) {
+        console.log(title);
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i].title == title) {
+                infoWindow.setContent(wikiLink);
+                infoWindow.open(map, markers[i]);
+            }
+        }
+    },
     placeSearch: function(googlePlacesKeyword) {
         // console.log(googlePlacesKeyword);
-        for(var i=0; i<markers.length;i++) {
+        for (var i=0; i<markers.length;i++) {
             markers[i].setMap(null);
             if(markers[i].title.toLowerCase().indexOf(googlePlacesKeyword.toLowerCase()) !== -1) {
                 // console.log("MATCH: "+ markers[i].title);
