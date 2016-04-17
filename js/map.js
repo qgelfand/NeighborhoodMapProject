@@ -67,13 +67,15 @@ var mapFunction = {
         //var placeLoc = {};
         var marker = {};
         if (status == google.maps.places.PlacesServiceStatus.OK) {
+            console.log(results[0]);
+
             for (var i = 0; i < results.length; i++) {
-                //placeLoc = results[i].geometry.location;
                 marker = new google.maps.Marker({
                     map: map,
                     position: results[i].geometry.location,
                     placeId: results[i].place_id,
-                    icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+                    icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+                    title: results[i].name
                 });
                 google.maps.event.addListener(marker, 'click', mapFunction.clickedMarker(marker));
                 markers.push(marker);
@@ -118,6 +120,8 @@ var mapFunction = {
             marker.setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png');
             marker.setAnimation(google.maps.Animation.BOUNCE);
             setTimeout(function(){ marker.setAnimation(null); }, 712)
+            infoWindow.setContent(marker.title);
+            infoWindow.open(map, marker);
         };
     },
     //sets info window content to the wikipedia link and opens the info window, attached to the selected marker
@@ -130,7 +134,7 @@ var mapFunction = {
         }
     },
     placeSearch: function(googlePlacesKeyword) {
-        markers.setMap(null);
+        console.log(googlePlacesKeyword);
 
     }
 };
