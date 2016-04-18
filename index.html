@@ -1,44 +1,42 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <title>Museums by Denver</title>
+        <meta name='viewport' content='initial-scale=1.0'>
+        <meta charset='utf-8'>
+        <link rel='stylesheet' href='css/style.css'>
+    </head>
 
-<head>
-    <title>Museums by Denver</title>
-    <meta name='viewport' content='initial-scale=1.0'>
-    <meta charset='utf-8'>
-    <!-- <link rel='stylesheet' href='css/bootstrap.min.css'> -->
-    <link rel='stylesheet' href='css/style.css'>
-</head>
-
-<body>
-    <div class='wrapper'>
-        <!-- <div class='searchBar'>Keyword Search:<input type='search' data-bind='textinput: keyword, event: {keyup: myViewModel.filterMarkers}'></div> -->
-        <div class='searchBar'>Google Places Search:<input type='search' onsearch='myViewModel.googlePlaceSearch(this)' data-bind='textinput: googlePlaceKeyword'><button class='btnSearch' data-bind="event: {click: googlePlaceSearch}">Search</button></div>
-        <!--key=AIzaSyA7ZfSsVlZJjI561GequGp00PrTXg6x_3o&-->
-        <div id='map'></div>
-        <div class='listArea'>
-            <p class='placesLabel'>(Selectable) Filter Results: <span data-bind='visible: noMatch'>NONE!</span></p>
-            <ul class='placesList' data-bind='foreach: arrayPlaces'>
-                <li data-bind='visible: filterMatch, click: $parent.selectPlace, css: {selectedPlace: selected}'>
-                    <span data-bind='text: title'></span>
-                </li>
-            </ul>
-            <div class='wikipedia-container'>
-                <p class='wikipedia-header'>Discover More About A Location<br>(via MediaWiki API):</p>
-                <span class='wikipedia-links' data-bind='html: wikiLink'></span>
+    <body>
+        <div class='wrapper'>
+            <div class='searchBar'>Google Places Search:<input type='search' onsearch='myViewModel.googlePlaceSearch(this)' data-bind='textinput: googlePlaceKeyword'>
+                <button class='btnSearch' data-bind="event: {click: googlePlaceSearch}">Search</button>
             </div>
+            
+            <div id='map'></div>
+            <div class='listArea'>
+                <p class='placesLabel'>(Selectable) Filter Results: <span data-bind='visible: noMatch'>NONE!</span></p>
+                <ul class='placesList' data-bind='foreach: aPlaces'>
+                    <li data-bind='visible: filterMatch, click: $parent.selectPlace, css: {selectedPlace: selected}'>
+                        <span data-bind='text: title'></span>
+                    </li>
+                </ul>
+                <div class='wikipedia-container'>
+                    <p class='wikipedia-header'>Discover More About A Location<br>(via MediaWiki API):</p>
+                    <span class='wikipedia-links' data-bind='html: wikiLink'></span>
+                </div>
+            </div>
+            <div class='end'></div>
         </div>
-        <div class='end'></div>
-    </div>
-    <!--scripts to be loaded-->
-    <script src='js/map.js'></script>
-    <script src='https://maps.googleapis.com/maps/api/js?libraries=places&callback=mapFunction.initMap' onerror="mapFunction.googleError()" async defer></script>
-    <!-- <script src="https://maps.googleapis.com/maps/api/js?libraries=places" onerror="mapFunction.googlePlacesError()" async defer></script> -->
-    <script src='libraries/knockout-3.4.0.js'></script>
-    <script src='libraries/jquery.min.js'></script>
-    <script src='js/viewModel.js'></script>
-    <script>
-        ko.applyBindings(myViewModel);
-    </script>
-</body>
-
+        <!--scripts to be loaded-->
+        <script src='js/map.js'></script>
+        <!--key=AIzaSyA7ZfSsVlZJjI561GequGp00PrTXg6x_3o&-->
+        <script src='https://maps.googleapis.com/maps/api/js?libraries=places&callback=mapFunction.initMap' onerror="mapFunction.googleError()" async defer></script>
+        <script src='libraries/knockout-3.4.0.js'></script>
+        <script src='libraries/jquery.min.js'></script>
+        <script src='js/viewModel.js'></script>
+        <script>
+            ko.applyBindings(myViewModel);
+        </script>
+    </body>
 </html>

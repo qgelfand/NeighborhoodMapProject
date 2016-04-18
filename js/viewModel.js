@@ -4,13 +4,14 @@ var myViewModel = {
     googlePlaceKeyword: ko.observable(''),
     noMatch: ko.observable(false),
     wikiLink: ko.observable(''),
-    //array that has all locations/markers
-    arrayPlaces: ko.observableArray([]),
+    aPlaces: ko.observableArray([]),
+    
     //called on map load, calls initial load of markers
     initialize: function() {
-        mapFunction.initializeMarkers(myViewModel.arrayPlaces());
+        mapFunction.initializeMarkers(myViewModel.aPlaces());
     },
 
+    //once markers are created, adds a "place" object to the Model
     addPlace: function(marker) {
         var newPlace = {
             title: marker.title,
@@ -19,34 +20,37 @@ var myViewModel = {
             filterMatch: ko.observable(true),
             selected: ko.observable(false)
         };
-        myViewModel.arrayPlaces.push(newPlace);
+        myViewModel.aPlaces.push(newPlace);
     },
+
     //highlights the list item and the marker associated with it
     selectPlace: function(place) {
-        for (i = 0; i < myViewModel.arrayPlaces().length; i++) {
-            myViewModel.arrayPlaces()[i].selected(false);
+        for (i = 0; i < myViewModel.aPlaces().length; i++) {
+            myViewModel.aPlaces()[i].selected(false);
         }
         place.selected(true);
         //console.log(place.title);
         myViewModel.loadWikiArticle(place.title);
         mapFunction.clickedListItem(place);
     },
+
     //takes the clicked marker and selects the list item (by calling selectPlace(marker))
     eventClickedMarker: function(marker) {
-        for (i = 0; i < myViewModel.arrayPlaces().length; i++) {
-            if (myViewModel.arrayPlaces()[i].title.indexOf(marker.title) !== -1) {
-                myViewModel.selectPlace(myViewModel.arrayPlaces()[i]);
+        for (i = 0; i < myViewModel.aPlaces().length; i++) {
+            if (myViewModel.aPlaces()[i].title.indexOf(marker.title) !== -1) {
+                myViewModel.selectPlace(myViewModel.aPlaces()[i]);
             }
         }
     },
+
     //makes ajax request to list relevant wikipedia articles based on selected place
     loadWikiArticle: function(selection) {
         myViewModel.wikiLink('Searching...');
         var wikiRequestTimeout = setTimeout(function() {
             myViewModel.wikiLink('No Wikipedia results for this place.');
-            //alert('Failed to get wikipedia resources.');
         }, 4000);
-        //AJAX performed through JQuery, refactored to use KnockoutJS binding for updating DOM
+
+        //AJAX request to MediaWiki
         $.ajax({
             url: 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + selection + '&format=json&callback=wikiCallback',
             dataType: 'jsonp',
@@ -62,6 +66,8 @@ var myViewModel = {
             },
         });
     },
+
+    //sends keyword to the placeSearch() function
     googlePlaceSearch: function() {
         // console.log('Place Search Triggered');
         mapFunction.placeSearch(myViewModel.googlePlaceKeyword());

@@ -23,7 +23,7 @@ var mapFunction = {
         alert('Something Done Broke: Failed to get Google Places.');
     },
     //called once the map loads, places markers based on data in the model & adds click listener
-    initializeMarkers: function(arrayPlaces) {
+    initializeMarkers: function(aPlaces) {
 
 /*GOOGLE PLACES*/
         //sets up an initial seach to pull museum locations from Google Places
@@ -69,12 +69,12 @@ var mapFunction = {
     },
 
     //filters displayed markers based on filtered list
-    updateMarkers: function(arrayPlaces) {
+    updateMarkers: function(aPlaces) {
         // mapFunction.hideMarkers();
         infoWindow.close();
-        for (var i = 0; i < arrayPlaces.length; i++) {
+        for (var i = 0; i < aPlaces.length; i++) {
             markers[i].setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
-            if (arrayPlaces[i].filterMatch()) {
+            if (aPlaces[i].filterMatch()) {
                 markers[i].setMap(map);
             } else markers[i].setMap(null);
         }
